@@ -1,0 +1,624 @@
+basePath: /api/v1
+definitions:
+  github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse:
+    properties:
+      error:
+        example: bad request
+        type: string
+      message:
+        example: потеря потерь
+        type: string
+    type: object
+  internal_features_statistics_transport_http.GetStatisticsResponse:
+    properties:
+      tasks_average_completion_time:
+        example: 1m30s
+        type: string
+      tasks_completed:
+        example: 50
+        type: integer
+      tasks_completed_rate:
+        example: 20
+        type: number
+      tasks_created:
+        example: 456
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.CreateTaskRequest:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      description:
+        example: сделать до четверга
+        maxLength: 1000
+        minLength: 1
+        type: string
+      title:
+        example: Домашнее задание
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - author_user_id
+    - title
+    type: object
+  internal_features_tasks_transport_http.CreateTaskResponse:
+    properties:
+      author_user_id:
+        example: 2
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-02-26T10:30:00Z"
+        type: string
+      description:
+        example: сделать до рождества
+        type: string
+      id:
+        example: 3453
+        type: integer
+      title:
+        example: купить елку
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.GetTaskResponse:
+    properties:
+      author_user_id:
+        example: 2
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-02-26T10:30:00Z"
+        type: string
+      description:
+        example: сделать до рождества
+        type: string
+      id:
+        example: 3453
+        type: integer
+      title:
+        example: купить елку
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.PatchTaskRequest:
+    properties:
+      completed:
+        example: false
+        type: boolean
+      description:
+        example: сделать до рождества
+        type: string
+      title:
+        example: купить елку
+        type: string
+    type: object
+  internal_features_tasks_transport_http.PatchUserResponse:
+    properties:
+      author_user_id:
+        example: 2
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-02-26T10:30:00Z"
+        type: string
+      description:
+        example: сделать до рождества
+        type: string
+      id:
+        example: 3453
+        type: integer
+      title:
+        example: купить елку
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.TaskDTOResponse:
+    properties:
+      author_user_id:
+        example: 2
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-02-26T10:30:00Z"
+        type: string
+      description:
+        example: сделать до рождества
+        type: string
+      id:
+        example: 3453
+        type: integer
+      title:
+        example: купить елку
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_users_transport_http.CreateUserRequest:
+    properties:
+      full_name:
+        example: Mizht GISASR
+        maxLength: 100
+        minLength: 3
+        type: string
+      phone_number:
+        example: "+79877128288"
+        maxLength: 15
+        minLength: 10
+        type: string
+    required:
+    - full_name
+    type: object
+  internal_features_users_transport_http.CreateUserResponse:
+    properties:
+      full_name:
+        example: Jorge Bush
+        type: string
+      id:
+        example: 0
+        type: integer
+      phone_number:
+        example: "+79877128288"
+        type: string
+      version:
+        example: 0
+        type: integer
+    type: object
+  internal_features_users_transport_http.GetUserResponse:
+    properties:
+      full_name:
+        example: Jorge Bush
+        type: string
+      id:
+        example: 0
+        type: integer
+      phone_number:
+        example: "+79877128288"
+        type: string
+      version:
+        example: 0
+        type: integer
+    type: object
+  internal_features_users_transport_http.PatchUserRequest:
+    properties:
+      full_name:
+        example: Maksim Maksimovich
+        type: string
+      phone_number:
+        example: "+79892716764"
+        type: string
+    type: object
+  internal_features_users_transport_http.UserDTOResponse:
+    properties:
+      full_name:
+        example: Jorge Bush
+        type: string
+      id:
+        example: 0
+        type: integer
+      phone_number:
+        example: "+79877128288"
+        type: string
+      version:
+        example: 0
+        type: integer
+    type: object
+host: 127.0.0.1:5050
+info:
+  contact: {}
+  description: Todo Application REST-API scheme
+  title: Golang Todo API
+  version: "1.0"
+paths:
+  /statistics:
+    get:
+      description: Получение статистики по задачам с опциональной фильтрацией по user_id
+        и/или временному промежутку
+      parameters:
+      - description: Фильтрация статистики по конкретному пользователю
+        in: query
+        name: user_id
+        type: integer
+      - description: 'Начало промежутка рассмотрения статистики (включительно), формат:
+          YYYY-MM-DD'
+        in: query
+        name: from
+        type: string
+      - description: 'Конец промежутка рассмотрения статистики (не включительно),
+          формат: YYYY-MM-DD'
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно изменена задача
+          schema:
+            $ref: '#/definitions/internal_features_statistics_transport_http.GetStatisticsResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Получение статистики
+      tags:
+      - statistics
+  /tasks:
+    get:
+      description: Просмотр списка задач с опциональной пагинацией и\или фильтрацией
+        по ID автора задачи
+      parameters:
+      - description: Фильтрация задачи по ID автора
+        in: query
+        name: user_id
+        type: integer
+      - description: Размер страниц с задачами
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение страницы с задачами
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное получение списка задач
+          schema:
+            items:
+              $ref: '#/definitions/internal_features_tasks_transport_http.TaskDTOResponse'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Список задач
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Создать новую задачу в системе
+      parameters:
+      - description: CreateTask тело запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_tasks_transport_http.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешно создана задача
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.CreateTaskResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: Author not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Создать задачу
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      description: Удалить существующую задачу в системе по ее ID
+      parameters:
+      - description: ID удаляемой задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Успешное удаление задачи
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Удалить задачу
+      tags:
+      - tasks
+    get:
+      description: Получить конкретную задачу по id
+      parameters:
+      - description: ID получаемой задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно получена задача
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.GetTaskResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Получить задачу
+      tags:
+      - tasks
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        Изменение информации об уже существующем задачи
+        ### Логика обновления полей (Three-state logic):
+        1. **Поле не передано**: `description` игнорируется, значение в БД не меняется
+        2. **Явно передано значение**:  `"description": "Вечером пойти за кладом"` - устанавливает новое описание задачи
+        3. **Передан null**: `"description": null` - очищает поле в БД(set to NULL)
+        ОГРАНИЧЕНИЯ: `title` и `completed` не может быть выставлен как null
+      parameters:
+      - description: ID изменяемой задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PatchTask тело запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_tasks_transport_http.PatchTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно изменена задача
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.PatchUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Изменение задачи
+      tags:
+      - tasks
+  /users:
+    get:
+      description: Просмотр списка пользователей с опциональной пагинацией
+      parameters:
+      - description: Размер страницв с пользователями
+        in: query
+        name: limit
+        type: integer
+      - description: Смещение страницы с пользователями
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешное получение списка пользователей
+          schema:
+            items:
+              $ref: '#/definitions/internal_features_users_transport_http.UserDTOResponse'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Список пользователей
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Создать нового пользователя в системе
+      parameters:
+      - description: CreateUser тело запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_users_transport_http.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешно созданный пользователь
+          schema:
+            $ref: '#/definitions/internal_features_users_transport_http.CreateUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Создать пользователя
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить существующего пользователя в системе
+      parameters:
+      - description: ID удаляемего пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Успешно удаление пользователя
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Удалить пользователя
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Получить конкретного пользователя по id
+      parameters:
+      - description: ID получаемого пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно получен пользователь
+          schema:
+            $ref: '#/definitions/internal_features_users_transport_http.GetUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Получить пользователя
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        Изменение информации об уже существующем пользователе
+        ### Логика обновления полей (Three-state logic):
+        1. **Поле не передано**: `phone_number` игнорируется, значение в БД не меняется
+        2. **Явно передано значение**:  `"phone_number": "+789597971971"` - устанавливает новый номер
+        3. **Передан null**: `"phone_number": null` - очищает поле в БД(set to NULL)
+        ОГРАНИЧЕНИЯ: `full_number` не может быть выставлен как null
+      parameters:
+      - description: ID изменяемого пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: PatchUser тело запроса
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_users_transport_http.PatchUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешно изменен пользователь
+          schema:
+            items:
+              $ref: '#/definitions/internal_features_users_transport_http.UserDTOResponse'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_MIZHT_golang-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Изменение пользователя
+      tags:
+      - users
+swagger: "2.0"
